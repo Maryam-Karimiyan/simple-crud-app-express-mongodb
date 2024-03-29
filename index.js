@@ -9,7 +9,10 @@ const app = express();
 app.get("/", (req, res) => {
   return res.send("hello");
 });
-
+app.post("/api/products",(req,res)=>{
+    console.log(req.body);
+    res.send(req.body)
+})
 //////
 mongoose
   .connect(
