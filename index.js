@@ -1,78 +1,90 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Product = require("./models/product.model");
-
+const ProductRoute=require("./routes/product.route")
 ////////////////////////////////////////////////////////////////////////////////////////////////
 const app = express();
+
+
+//دوتای پایینی middleware configuration
 //برای اینکه بتوان داده جیسون به نود ارسال کرد چون بصورت پیشفرض امکانش نیست
 app.use(express.json());
 //اگر بخواهیم بجای فرمت جیسون با فرمت فرم بفرستیم اطلاعات رو از این باید استفاده کنیم
 app.use(express.urlencoded({extended:false}))
+
+//routes
+app.use("/api/products",ProductRoute)
+
+
+
+
+
+
 //req: whatever client sends to server is request
 //res: whatever comes back from server is response
 
-app.get("/", (req, res) => {
-  return res.send("hello");
-});
-//create
-app.post("/api/products", async (req, res) => {
-  // console.log(req.body);
-  // res.send(req.body)
-  try {
-    const pro = await Product.create(req.body);
-    return res.status(200).json(pro);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-//getall
-app.get("/api/products", async (req, res) => {
-  try {
-    const pros = await Product.find({});
-    res.status(200).json(pros);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-//get by id
-app.get("/api/product/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const pro = await Product.findById(id);
-    return res.status(200).json(pro);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-//update
-app.put("/api/product/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const pro = await Product.findByIdAndUpdate(id,req.body);
-    if(!pro){
-        return res.status(404),json({message:"No Product Found!"})
-    }
-    const updatedPro = await Product.findById(id);
+// app.get("/", (req, res) => {
+//   return res.send("hello");
+// });
+// //create
+// app.post("/api/products", async (req, res) => {
+//   // console.log(req.body);
+//   // res.send(req.body)
+//   try {
+//     const pro = await Product.create(req.body);
+//     return res.status(200).json(pro);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+// //getall
+// app.get("/api/products", async (req, res) => {
+//   try {
+//     const pros = await Product.find({});
+//     res.status(200).json(pros);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+// //get by id
+// app.get("/api/products/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const pro = await Product.findById(id);
+//     return res.status(200).json(pro);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+// //update
+// app.put("/api/products/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const pro = await Product.findByIdAndUpdate(id,req.body);
+//     if(!pro){
+//         return res.status(404),json({message:"No Product Found!"})
+//     }
+//     const updatedPro = await Product.findById(id);
 
-    return res.status(200).json(updatedPro);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-//delete
-app.delete("/api/product/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const pro = await Product.findByIdAndDelete(id);
-      if(!pro){
-          return res.status(404),json({message:"No Product Found!"})
-      }
+//     return res.status(200).json(updatedPro);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+// //delete
+// app.delete("/api/products/:id", async (req, res) => {
+//     try {
+//       const { id } = req.params;
+//       const pro = await Product.findByIdAndDelete(id);
+//       if(!pro){
+//           return res.status(404),json({message:"No Product Found!"})
+//       }
     
-      return res.status(200).json({message:"Product deleted successfully!"});
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+//       return res.status(200).json({message:"Product deleted successfully!"});
+//     } catch (error) {
+//       res.status(500).json({ error: error.message });
+//     }
+//   });
 //////
 mongoose
   .connect(
